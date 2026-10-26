@@ -1,0 +1,14 @@
+body {
+    background-color: black;
+    color: skyblue;
+    font-family: 'Fragment Mono', monospace;
+}
+
+section {
+    border: 2px dashed skyblue;
+}
+
+textarea {
+    background-color: black;
+    border-color: black;
+}
