@@ -1,14 +1,73 @@
+@font-face {
+    font-family: fnt_base;
+    src: url(../fnt/frg_m/base.ttf);
+}
+
 body {
     background-color: black;
     color: skyblue;
-    font-family: 'Fragment Mono', monospace;
+    font-family: fnt_base, monospace;
+    font-size: medium;
+}
+
+body::selection {
+  color:dodgerblue;
+  background-color: white;
 }
 
 section {
-    border: 2px dashed skyblue;
+    padding: 4px;
+    border: 2px solid skyblue;
 }
 
-textarea {
+input[type="text"] {
+    resize: none;
     background-color: black;
-    border-color: black;
+    border: 0px solid black;
+    color: skyblue;
+    outline: none;
+    font-family: fnt_base, monospace;
+    font-size: medium;
+    width: 10em;
+}
+
+input[type="text"]:focus {
+    resize: none;
+    background-color: black;
+    border: 0px solid black;
+    color: skyblue;
+    outline: none;
+    box-shadow: none;
+}
+
+.glitch {
+    animation: flicker 0.3s linear 1;
+}
+
+@keyframes flicker {
+    0%   { opacity: 1; }
+    50%  { opacity: 0.3; transform: translateX(1px); }
+    100% { opacity: 1; }
+}
+
+#cursor {
+    display: inline-block;
+    width: 10px;
+    height: 1em;
+    background-color: skyblue;
+    animation: blink 1s step-start infinite;
+    vertical-align: bottom;
+}
+
+@keyframes blink {
+    0%, 49% { background-color: skyblue; }
+    50%, 100% { background-color: transparent; }
+}
+
+#inp {
+    position: relative;
+    opacity: 0;
+    height: 1px;
+    width: 1px;
+    z-index: 0;
 }

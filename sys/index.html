@@ -5,15 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Varnet AdminAccess</title>
     <link rel="stylesheet" href="sty/main.css">
+    <script src="scr/terminal.js"></script>
 </head>
 <body>
-    <section>
-        <div id="title">Varnet AdminAccess</div>
-        <br>
-        <form>
-             <div id="cmd">_VNAA _sys:\Users\Administrator><textarea></textarea></div>
-        </form>
-       
+    <section style="height: 95vh">
+        <div id="container">
+            <div id="terminal"></div>
+            <div id="inputLine" onclick="document.getElementById('inp').focus();">
+                <span id="line"></span><span id="cursor"></span>
+            </div>
+            <input type="text" id="inp" autocomplete="off" />
+        </div>
     </section>
 </body>
 </html>
