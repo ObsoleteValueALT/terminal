@@ -62,8 +62,13 @@ document.addEventListener("DOMContentLoaded", function () {
 
       function initTerminal() {
         const genericResponses = {
-          reboot: "System cannot be rebooted at this time. Please try again.",
-          default: "This term is not recognized as the name of a command, function, script file, or operable program. Check the spelling of the name, or if a path was included, verify that the path is correct and try again."
+          reboot: {
+            response: "Attempting system reboot.",
+            action: reboot
+          },
+          default: {
+            response: "This term is not recognized as the name of a command, function, script file, or operable program. Check the spelling of the name, or if a path was included, verify that the path is correct and try again."
+          }
         };
 
         const idleWhispers = [
@@ -75,7 +80,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         setInterval(() => {
           const whisper = idleWhispers[Math.floor(Math.random() * idleWhispers.length)];
-          printToTerminal("[system-whisper] " + whisper);
+          printToTerminal("[system-remote] " + whisper);
         }, 30000);
 
         function printToTerminal(text) {
@@ -90,6 +95,9 @@ document.addEventListener("DOMContentLoaded", function () {
           const cmd = input.toLowerCase().trim();
           if (genericResponses[cmd]) {
             printToTerminal("> " + genericResponses[cmd]);
+            if (genericRespones[cmd].action) {
+              genericRespones[cmd].action();
+            }
           } else {
             printToTerminal("> " + genericResponses.default);
           }
@@ -119,3 +127,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
       typeBootLine();
     });
+
+function reboot() {
+  printToTerminal("Reboot failed.");
+  printToTerminal("[err] AdminAccess Terminal cannot be rebooted remotely.");
+}
