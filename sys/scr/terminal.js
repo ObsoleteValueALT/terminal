@@ -6,35 +6,35 @@ document.addEventListener("DOMContentLoaded", function () {
       const bootLines = [
             {
                   line: "SYSTEM INITIALIZING",
-                  delay: 250;
+                  delay: 250
             },
             {
                   line: "INTERFACE INITIALIZING",
-                  delay: 250;
+                  delay: 250
             },
             {
                   line: "CORE COMMANDS INITIALIZING",
-                  delay: 250;
+                  delay: 250
             },
             {
                   line: "SUBSYSTEM COMMANDS INITIALIZING",
-                  delay: 250;
+                  delay: 250
             },
             {
                   line: "SYSTEM REGISTERED",
-                  delay: 150;
+                  delay: 150
             },
             {
                   line: "RECIEVING PROGRAMS",
-                  delay: 150;
+                  delay: 150
             },
             {
                   line: "RECIEVING SCRIPTS",
-                  delay: 50;
+                  delay: 50
             },
             {
                   line: "TERMINAL FULLY INITIALIZED",
-                  delay: 250;
+                  delay: 250
             },
       ];
 
