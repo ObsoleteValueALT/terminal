@@ -4,9 +4,38 @@ document.addEventListener("DOMContentLoaded", function () {
       const realInput = document.getElementById("inp");
 
       const bootLines = [
-        "BOOTING UP...",
-        "LOADING INTERFACE...",
-        "INITIALIZING CORE..."
+            {
+                  line: "SYSTEM INITIALIZING",
+                  delay: 250;
+            },
+            {
+                  line: "INTERFACE INITIALIZING",
+                  delay: 250;
+            },
+            {
+                  line: "CORE COMMANDS INITIALIZING",
+                  delay: 250;
+            },
+            {
+                  line: "SUBSYSTEM COMMANDS INITIALIZING",
+                  delay: 250;
+            },
+            {
+                  line: "SYSTEM REGISTERED",
+                  delay: 150;
+            },
+            {
+                  line: "RECIEVING PROGRAMS",
+                  delay: 150;
+            },
+            {
+                  line: "RECIEVING SCRIPTS",
+                  delay: 50;
+            },
+            {
+                  line: "TERMINAL FULLY INITIALIZED",
+                  delay: 250;
+            },
       ];
 
 
@@ -17,11 +46,11 @@ document.addEventListener("DOMContentLoaded", function () {
         if (i < bootLines.length) {
           const line = document.createElement("div");
           line.parentElement = fakeInput;
-          line.textContent = bootLines[i];
+          line.textContent = bootLines[i].line;
           line.classList.add("glitch");
           terminal.appendChild(line);
           i++;
-          setTimeout(typeBootLine, delay);
+          setTimeout(typeBootLine, bootLines[i].delay);
         } else {
           setTimeout(() => {
             document.getElementById("container").style.display = "flex";
