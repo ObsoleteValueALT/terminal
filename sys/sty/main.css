@@ -17,7 +17,22 @@ body::selection {
 
 section {
     padding: 4px;
-    border: 2px solid skyblue;
+    border: 1px solid skyblue;
+    overflow-y: auto;
+    scrollbar-color: skyblue black;
+    scrollbar-width: thin;
+    scrollbar-gutter: stable;
+}
+
+pre {
+    font-weight: bolder;
+}
+
+#inputLine {
+    display: inline-block;
+    font-size: 1em;
+    margin-top: 10px;
+    cursor: text;
 }
 
 input[type="text"] {
@@ -70,4 +85,43 @@ input[type="text"]:focus {
     height: 1px;
     width: 1px;
     z-index: 0;
+}
+
+#container {
+    display: flex;
+    flex-direction: column;
+    max-width: 800px;
+    width: 90%;
+    margin: 0 auto;
+    padding: 20px 0;
+}
+
+#terminal {
+    white-space: pre-wrap;
+    overflow-y: visible;
+    flex-grow: 1;
+}
+
+.terminal-line {
+    margin-bottom: 8px;
+}
+
+#inputLine {
+    display: inline-block;
+    font-size: 1em;
+    margin-top: 10px;
+    cursor: text;
+}
+
+#line {
+    display: inline;
+}
+
+#cursor {
+    display: inline-block;
+    width: 10px;
+    height: 1em;
+    background-color: #00FF99;
+    animation: blink 1s step-start infinite;
+    vertical-align: bottom;
 }
