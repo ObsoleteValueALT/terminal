@@ -2,6 +2,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const terminal = document.getElementById("terminal");
   const fakeInput = document.getElementById("line");
   const realInput = document.getElementById("inp");
+  const sect = document.getElementById("sect");
 
   const logoTemplate = document.getElementById("logo-template").textContent;
 
@@ -11,12 +12,16 @@ document.addEventListener("DOMContentLoaded", function () {
   let demo = false;
   let input_enabled = true;
 
+  let availUpdates = 2;
+
   function printToTerminal(text) {
     const line = document.createElement("div");
     line.className = "terminal-line";
     line.innerHTML = text;
     terminal.appendChild(line);
     terminal.scrollTop = terminal.scrollHeight;
+    sect.scrollTop = sect.scrollHeight;
+    realInput.focus();
   }
 
   const bootLines = [
@@ -98,6 +103,9 @@ document.addEventListener("DOMContentLoaded", function () {
           },
           help: {
             action: cmd_help
+          },
+          update: {
+            action: cmd_update
           },
           errs: {
             action: cmd_errs
@@ -191,6 +199,13 @@ document.addEventListener("DOMContentLoaded", function () {
         
 
         setInterval(() => {
+          if (Math.random() > 0.6) {
+            availUpdates++;
+            printToTerminal("[system-info]: system-manager has identified 1 new update! Update terminal using 'update all'.");
+          }
+        }, 60000);
+
+        setInterval(() => {
           if (!scanning) {
             remoteScan(true)
           }
@@ -221,7 +236,9 @@ document.addEventListener("DOMContentLoaded", function () {
               if (cmds[cmd].action) {
                 if (cmds[cmd].action.length == 1) {
                   if (sort[1] == " " || sort[1] == "" || sort[1] == null) {
-                    printToTerminal("[err]: " + "<span style=\"color: orangered;\">" +errs.too_few_args.response.replace("<cmd>", "'" + cmd + "'").replace("<inp>", 0).replace("<req>", 1) + "</span>");
+                    
+                      printToTerminal("[err]: " + "<span style=\"color: orangered;\">" +errs.too_few_args.response.replace("<cmd>", "'" + cmd + "'").replace("<inp>", 0).replace("<req>", 1) + "</span>");
+                    
                   }
                   else {
                     cmds[cmd].action(sort[1]);
@@ -437,6 +454,231 @@ document.addEventListener("DOMContentLoaded", function () {
       printToTerminal("• " + "scan" + ": " + help_responses["scan"].response);
       printToTerminal("• " + "reboot" + ": " + help_responses["reboot"].response);
       printToTerminal("[system-info]: Furthermore, to learn more information about any other command, input '-h' as the argument in your input.")
+    }
+
+    function cmd_update(cmd) {
+      if (cmd == "check" || cmd == "scan" || cmd == "get") {
+        update_check();
+      }
+      else if (cmd == "fetch") {
+        update_fetch(availUpdates);
+      }
+      else if (cmd == "all") {
+        update_fetch(update_check());
+      }
+      else {
+        printToTerminal("[err]: " + errs["unknown_arg"].response.replace("<arg>", cmd).replace("<cmd>", "update"))
+      }
+    }
+
+    let systemDirectories = [
+      "_sys\\VarNet\\",
+      "_sys\\VarNet\\System\\",
+      "_sys\\VarNet\\SystemResources\\",
+      "_sys\\VarNet\\Resources\\",
+      "_sys\\VarNet\\Firmware\\"
+    ]
+
+    let systemFiles = [
+      "_sys\\VarNet\\bootstat.dat",
+      "_sys\\VarNet\\vn.ini",
+      "_sys\\VarNet\\regedit.exe",
+      "C_RandNum",
+      "NumRand",
+      "HexRand",
+      "C_RandHex",
+      "FullRand",
+      "_sys\\VarNet\\System\\desk.cpl",
+      "_sys\\VarNet\\System\\devobj.dll",
+      "_sys\\VarNet\\System\\devmgr.dll",
+      "_sys\\VarNet\\System\\devinv.dll"
+    ]
+
+    let rndCmdPre = [
+      "Desk",
+      "Desktop",
+      "Dev",
+      "Display",
+      "Control",
+      "Diag",
+      "Config",
+      "Disk",
+      "Admin",
+      "Term",
+      "Terminal",
+      "VarNet",
+      "vn",
+      "admin",
+      "config",
+      "diag",
+      "app",
+      "Application",
+      "ip",
+      "Media",
+      "MDM",
+      "Net",
+      "net",
+      "reg",
+      "sys",
+      "Auth",
+      "System"
+    ]
+
+    let rndCmdMid = [
+      "Service",
+      "Host",
+      "Config",
+      "help",
+      "api",
+      "Frame",
+      "Control",
+      "Client",
+      "Manifest",
+      "Access",
+      "boot",
+      "edit",
+      "ui",
+      "props",
+      "Context",
+      "Access",
+      "Cred",
+      "Input",
+      "Output",
+      "Core",
+      "Sub",
+      "base",
+      "Base",
+      "Shell",
+      "prov",
+      "diag"
+    ]
+
+    let rndCmdEnd = [
+      "Manager",
+      "Handler",
+      "Utils",
+      "Core",
+      "Decoder",
+      "Assistant",
+      "Prov",
+      "Proxy",
+      "ControlPanel",
+      "Panel",
+      "Settings",
+      "Cache",
+      "Backup",
+      "Broker",
+      "Deploy",
+      "Indexer",
+      "Encoder",
+      "Host",
+      "Compat",
+      "Shell"
+    ]
+
+    function update_check() {
+      printToTerminal("[system-manager]: Checking for updates.")
+      if (availUpdates < 0) {
+        printToTerminal("[system-manager]: No updates found.")
+        return 0
+      }
+      else {
+        printToTerminal("[system-manager]: "+availUpdates+" updates found.")
+        return availUpdates
+      }
+    }
+
+    async function update_fetch(up) {
+      scanning = true;
+      if (up == 0) {
+        printToTerminal("[system-manager]: System failed to update.")
+        printToTerminal("[err]: No updates identified by system-manager.")
+      }
+      else {
+        printToTerminal("[system-manager]: Identified " +up+ " updates.")
+        
+        for (let i = 1; i <= up; i++) {
+          printToTerminal("[system-manager]: Initiating update " + i+"/" +up+ ".")
+          let numFiles = 1 + Math.floor(Math.random() * 15);
+          printToTerminal("[system-manager]: Enumerating " +numFiles+ " files.")
+          printToTerminal("[system-manager]: Enumerated " +numFiles+ " files.")
+          let updateList = new Array(numFiles);
+            for (let i = 0; i < numFiles; i++) {
+              updateList[i] = systemFiles[Math.floor(Math.random() * randomFiles.length)];
+          };
+          printToTerminal("[system-manager]: Updating...")
+          disableInput();
+          for (const file of updateList) {
+            let directory = ""
+
+            if ((Math.floor(Math.random() * 10) < 9)) {
+              directory= systemDirectories[1];
+            }
+            else {
+              directory= systemDirectories[Math.floor(Math.random() * systemDirectories.length)]
+            }
+
+            let fileSize = Math.floor(Math.random() * 5000);
+            if (file == "NumRand") {
+              await updateFile(directory + Math.floor(Math.random() * 5000) + ".dll", fileSize);
+            }
+            else if (file == "C_RandNum") {
+              await updateFile(directory + "C_" + Math.floor(Math.random() * 5000) + ".dll", fileSize);
+            }
+            else if (file == "HexRand") {
+              const randHex = size => [...Array(size)].map(() => Math.floor(Math.random() * 16).toString(16)).join('');
+              await updateFile(directory + randHex(4 + Math.floor(Math.random() * 6)) + ".dll", fileSize)
+            }
+            else if (file == "C_RandHex") {
+              const randHex = size => [...Array(size)].map(() => Math.floor(Math.random() * 16).toString(16)).join('');
+              await updateFile(directory + "C_" + randHex(8) + ".dll", fileSize)
+            }
+            else if (file == "FullRand") {
+              await updateFile(directory + genRandFile() + ".dll", fileSize);
+            }
+            else {
+              if (file != undefined) {
+                await updateFile(file, fileSize);
+              }
+              else {
+                await updateFile(directory + genRandFile() + ".dll", fileSize);
+              }
+            }
+          }
+          printToTerminal("[system-manager]: Successfully updated " + numFiles + " files.")
+          printToTerminal("[system-manager]: Update " + i +"/" + up + " complete.")
+          availUpdates--;
+        }
+        enableInput();
+      }
+      scanning = false;
+    }
+
+    function genRandFile() {
+      let generatedFile = ""
+      let pre = rndCmdPre[Math.floor(Math.random() * rndCmdPre.length)];
+      let mid = rndCmdMid[Math.floor(Math.random() * rndCmdMid.length)];
+      let end = rndCmdEnd[Math.floor(Math.random() * rndCmdEnd.length)];
+
+      if (mid.toLowerCase().trim() == pre.toLowerCase().trim() || mid.toLowerCase().trim() == end.toLowerCase().trim()) {
+        mid = ""
+      }
+      if (end.toLowerCase().trim() == pre.toLowerCase().trim() || end.toLowerCase().trim() == mid.toLowerCase().trim()) {
+        end = ""
+      }
+      generatedFile = pre+mid+end;
+      return generatedFile;
+    }
+
+    async function updateFile(file, fileSize) {
+      printToTerminal("[system-manager]: " + "Updating file \"" + file + "\".");
+      return new Promise(resolve => { 
+        setTimeout(() => {
+          printToTerminal("[system-manager]: " + "Updated file \"" + file + "\" after " + fileSize/1000 + " seconds.");
+          resolve();
+        }, fileSize)
+      });
+
     }
 
     function cmd_errs(spec = "none") {

@@ -19,6 +19,7 @@ section {
     padding: 4px;
     border: 1px solid skyblue;
     overflow-y: auto;
+    overflow-x: clip;
     scrollbar-color: skyblue black;
     scrollbar-width: thin;
     scrollbar-gutter: stable;
@@ -99,6 +100,7 @@ input[type="text"]:focus {
 #terminal {
     white-space: pre-wrap;
     overflow-y: visible;
+    overflow-x: clip;
     flex-grow: 1;
 }
 
