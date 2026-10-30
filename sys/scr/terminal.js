@@ -12,7 +12,7 @@ document.addEventListener("DOMContentLoaded", function () {
   let demo = false;
   let input_enabled = true;
 
-  let availUpdates = 2;
+  let availUpdates = 0;
 
   function printToTerminal(text) {
     const line = document.createElement("div");
@@ -145,6 +145,9 @@ document.addEventListener("DOMContentLoaded", function () {
           scan: {
             response: "Activate VarNet Virus and Threat Protection subsystem on this terminal.",
           },
+          get: {
+            response: "Pull a file, operable program, or outside command from the VarNet System or an outside server socket.",
+          },
           params: {
             response: "Developer command. Used to test command parameters.",
           },
@@ -276,8 +279,6 @@ document.addEventListener("DOMContentLoaded", function () {
             }
           }
         });
-
-        //printToTerminal("<strong>VarNet AdminAccess");
         printLogo();
         printToTerminal("<strong>Please input a command.</strong>");
     }
