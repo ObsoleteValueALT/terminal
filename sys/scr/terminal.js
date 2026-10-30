@@ -263,8 +263,15 @@ document.addEventListener("DOMContentLoaded", function () {
 
         setInterval(() => {
           if (Math.random() > 0.6) {
-            availUpdates++;
-            printToTerminal("[system-info]: system-manager has identified 1 new update! Update terminal using 'update all'.");
+            if (Math.random() > 0.4) {
+              availUpdates++;
+              printToTerminal("[system-info]: system-manager has identified 1 new update! Update terminal using 'update all'.");
+            }
+            else {
+              let num = Math.floor(Math.random() * 3) + 2;
+              availUpdates+= num;
+              printToTerminal("[system-info]: system-manager has identified " + num +" new update! Update terminal using 'update all'.");
+            }
           }
         }, 60000);
 
