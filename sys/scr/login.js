@@ -210,10 +210,10 @@ document.addEventListener("DOMContentLoaded", function () {
                 if (!realInput.value.indexOf("password ")) {
                     let numDots = realInput.value.substring(realInput.value.indexOf("password")+9).length
                     let censored = "•".repeat(numDots)
-                    fakeInput.textContent = "_VNetAA _sys:\\login.dll>password " + censored;
+                    fakeInput.textContent = "_VNet _sys:\\login.dll>password " + censored;
                 }
                 else {
-                    fakeInput.textContent = "_VNetAA _sys:\\login.dll>" + realInput.value;
+                    fakeInput.textContent = "_VNet _sys:\\login.dll>" + realInput.value;
                 }
             }
         });
@@ -233,7 +233,7 @@ document.addEventListener("DOMContentLoaded", function () {
               respond(input);
               realInput.value = "";
               if (input_enabled) {
-                fakeInput.textContent = "_VNetAA _sys:\\login.dll>" + realInput.value;
+                fakeInput.textContent = "_VNet _sys:\\login.dll>" + realInput.value;
               }
               terminal.scrollTop = terminal.scrollHeight;
               window.scrollTo(0, terminal.scrollHeight);
@@ -244,7 +244,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function enableInput() {
       input_enabled = true;
-      fakeInput.innerHTML = "_VNetAA _sys:\\login.dll>" + realInput.value;
+      fakeInput.innerHTML = "_VNet _sys:\\login.dll>" + realInput.value;
       realInput.disabled = false;
       realInput.focus();
     }

@@ -682,6 +682,7 @@ document.addEventListener("DOMContentLoaded", function () {
             for (let i = 0; i < numFiles; i++) {
               updateList[i] = systemFiles[Math.floor(Math.random() * randomFiles.length)];
           };
+          printToTerminal("[system-manager]: Estimated wait time of " + (numFiles * Math.random() * 5 )+ " seconds.")
           printToTerminal("[system-manager]: Updating...")
           disableInput();
           for (const file of updateList) {
