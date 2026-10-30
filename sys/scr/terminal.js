@@ -196,6 +196,9 @@ document.addEventListener("DOMContentLoaded", function () {
           help: {
             response: "Provides some basic helpful information for using the AdminAccess interface as well as common useful commands."
           },
+          update: {
+            response: "Check for and initiate updates on this terminal."
+          },
           errs: {
             response: "Lists all system error codes and their description."
           },
