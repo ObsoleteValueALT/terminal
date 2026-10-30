@@ -8,6 +8,15 @@ document.addEventListener("DOMContentLoaded", function () {
 
   document.getElementById("logo-template").remove();
 
+  const randHex = size => [...Array(size)].map(() => Math.floor(Math.random() * 16).toString(16)).join('');
+
+  let user = localStorage.getItem("loggedInUser");
+  let pass = localStorage.getItem("loggedInPassword");
+
+  let systemID = "_VNetAA:" + randHex(4) + "-" + randHex(4);
+  let serverPort = Math.floor(Math.random() * 40000) + 10000;
+  let server = Math.floor(Math.random() * 23) + 1
+
   let scanning = false;
   let demo = false;
   let input_enabled = true;
@@ -24,6 +33,17 @@ document.addEventListener("DOMContentLoaded", function () {
     realInput.focus();
   }
 
+  const logins = {
+          admin: {
+              name: "Administrator",
+              password: "AdminAccessGLOBAL"
+          },
+          fmccarty: {
+              name: "F. McCarty",
+              password: "apateonas"
+          }
+        }
+
   const bootLines = [
             {
                   line: "SYSTEM INITIALIZING",
@@ -38,24 +58,48 @@ document.addEventListener("DOMContentLoaded", function () {
                   delay: 250
             },
             {
+                  line: "CORE COMMANDS INITIALIZED",
+                  delay: 50
+            },
+            {
                   line: "SUBSYSTEM COMMANDS INITIALIZING",
                   delay: 250
             },
             {
-                  line: "ESTABLISHING CONNECTION",
+                  line: "SUBSYSTEM COMMANDS INITIALIZED",
+                  delay: 50
+            },
+            {
+                  line: "ESTABLISHING CONNECTION TO VNET",
                   delay: 500
             },
             {
-                  line: "SYSTEM REGISTERED",
-                  delay: 150
-            },
-            {
-                  line: "RECIEVING PROGRAMS",
-                  delay: 150
-            },
-            {
-                  line: "RECIEVING SCRIPTS",
+                  line: "ESTABLISHED CONNECTION TO VNET",
                   delay: 50
+            },
+            {
+                  line: "CONNECTED TO VNET SERVER ENDPOINT, PORT:" + serverPort,
+                  delay: 10
+            },
+            {
+                  line: "REGISTERING SYSTEM '" + systemID + "' TO SERVER " + server,
+                  delay: 55
+            },
+            {
+                  line: "SYSTEM REGISTERED TO SERVER " + server,
+                  delay: 150
+            },
+            {
+                  line: "LOGGING SYSTEM ACCESS TO SERVER " + server,
+                  delay: 15
+            },
+            {
+                  line: "RECIEVING FILES",
+                  delay: 2550
+            },
+            {
+                  line: "RECIEVED FILES",
+                  delay: 150
             },
             {
                   line: "TERMINAL FULLY INITIALIZED",
@@ -63,19 +107,26 @@ document.addEventListener("DOMContentLoaded", function () {
             },
       ];
 
-
       let i = 0;
       const bootContainer = document.createElement("div");
       terminal.appendChild(bootContainer);
 
       function typeBootLine() {
+        if (!logins[user]) {
+          window.location.replace("invalidLogin");
+        }
+        else if (logins[user].password != pass) {
+          window.location.replace("invalidLogin");
+        }
         if (i < bootLines.length) {
-          const line = document.createElement("div");
-          line.parentElement = fakeInput;
-          line.textContent = bootLines[i].line;
-          bootContainer.appendChild(line);
-          i++;
-          setTimeout(typeBootLine, bootLines[i-1].delay);
+          if (bootLines[i].line) {
+            const line = document.createElement("div");
+            line.parentElement = fakeInput;
+            line.textContent = bootLines[i].line;
+            bootContainer.appendChild(line);
+            i++;
+            setTimeout(typeBootLine, bootLines[i-1].delay);
+          }
         } else {
           bootContainer.remove();
           const complete = document.createElement("div");
@@ -87,7 +138,7 @@ document.addEventListener("DOMContentLoaded", function () {
           setTimeout(() => {
             document.getElementById("container").style.display = "flex";
             realInput.focus();
-            fakeInput.textContent = "_VNAA _sys:\\Users\\Administrator>"
+            fakeInput.textContent = "_VNet _sys:\\Users\\" + user +">"
             initTerminal();
             complete.remove();
           }, 550);
@@ -97,6 +148,9 @@ document.addEventListener("DOMContentLoaded", function () {
           reboot: {
             response: "Attempting system reboot.",
             action: reboot
+          },
+          logout: {
+            action: cmd_logout
           },
           cmds: {
             action: listCmds
@@ -133,6 +187,9 @@ document.addEventListener("DOMContentLoaded", function () {
           reboot: {
             response: "Attempt system reboot of terminal. System cannot be rebooted if terminal is being accessed remotely.",
           },
+          logout: {
+            response: "Log out of this terminal.",
+          },
           cmds: {
             response: "List every command available to this terminal."
           },
@@ -156,18 +213,6 @@ document.addEventListener("DOMContentLoaded", function () {
           }
       };
       const errs = {
-        too_few_args: {
-          response: "Too few arguments (<inp>) entered for this command. The command <cmd> requires <req> arguments.",
-          id: "0x0004"
-        },
-        too_many_args: {
-          response: "Too many arguments (<inp>) entered for this command. The command <cmd> requires <req> arguments.",
-          id: "0x0003"
-        },
-        unknown_arg: {
-          response: "The argument <arg> is not applicable for this command (<cmd>).",
-          id: "0x0005"
-        },
         unknown_command: {
           response: "The term <cmd> is not recognized as the name of a command, function, script file, or operable program. Check the spelling of the name, or if a path was included, verify that the path is correct and try again.",
           id: "0x0001"
@@ -176,9 +221,21 @@ document.addEventListener("DOMContentLoaded", function () {
           response: "The term <arg> is not recognized as the name of a file or operable program. Check the spelling of the name, or if a path was included, verify that the path is correct and try again.",
           id: "0x0002"
         },
-        busy: {
-          response: "The terminal is busy. Please try again later.",
-          id: "0x0009"
+        too_many_args: {
+          response: "Too many arguments (<inp>) entered for this command. The command <cmd> requires <req> arguments.",
+          id: "0x0003"
+        },
+        too_few_args: {
+          response: "Too few arguments (<inp>) entered for this command. The command <cmd> requires <req> arguments.",
+          id: "0x0004"
+        },
+        unknown_arg: {
+          response: "The argument <arg> is not applicable for this command (<cmd>).",
+          id: "0x0005"
+        },
+        access_denied: {
+          response: "Access is denied.",
+          id: "0x0006"
         },
         invalid_access: {
           response: "The access key provided (<key>) is invalid.",
@@ -188,9 +245,9 @@ document.addEventListener("DOMContentLoaded", function () {
           response: "The data provided (<dat>) is invalid.",
           id: "0x0008"
         },
-        access_denied: {
-          response: "Access is denied.",
-          id: "0x0006"
+        busy: {
+          response: "The terminal is busy. Please try again later.",
+          id: "0x0009"
         },
         default: {
           response: "Unknown error. Please contact your administrator or VarNet Certified Technician for assistance.",
@@ -260,7 +317,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         realInput.addEventListener("input", () => {
           if (input_enabled) {
-            fakeInput.textContent = "_VNAA _sys:\\Users\\Administrator>" + realInput.value;
+            fakeInput.textContent = "_VNet _sys:\\Users\\" + user +">" + realInput.value;
           }
         });
 
@@ -272,7 +329,7 @@ document.addEventListener("DOMContentLoaded", function () {
               respond(input);
               realInput.value = "";
               if (input_enabled) {
-                fakeInput.textContent = "_VNAA _sys:\\Users\\Administrator>" + realInput.value;
+                fakeInput.textContent = "_VNet _sys:\\Users\\" + user +">" + realInput.value;
               }
               terminal.scrollTop = terminal.scrollHeight;
               window.scrollTo(0, terminal.scrollHeight);
@@ -280,7 +337,8 @@ document.addEventListener("DOMContentLoaded", function () {
           }
         });
         printLogo();
-        printToTerminal("<strong>Please input a command.</strong>");
+        printToTerminal("<strong>Welcome, " + logins[user].name + ".</strong>");
+        printToTerminal("<strong><u>Please input a command</u>.</strong>");
     }
 
     typeBootLine();
@@ -365,26 +423,24 @@ document.addEventListener("DOMContentLoaded", function () {
     async function threatRemoval(threatList) {
       disableInput();
       scanning = true;
-      printToTerminal("[system-vn-vatproc]: " + "Initiating threat removal.");
+      printToTerminal("[system-vnet-vatproc]: " + "Initiating threat removal.");
       for (const threat of threatList) {
         let fileSize = Math.floor(Math.random() * 5000);
         if (threat == "NumRand") {
           await removeFile(Math.floor(Math.random() * 5000) + extensions[Math.floor(Math.random() * extensions.length)], fileSize);
         }
         else if (threat == "IDRand") {
-          const randHex = size => [...Array(size)].map(() => Math.floor(Math.random() * 16).toString(16)).join('');
           await removeFile(randHex(6) + "-" + randHex(12) + "-" + randHex(8) + extensions[Math.floor(Math.random() * extensions.length)], fileSize)
         }
         else if (threat == "HexRand") {
-          const randHex = size => [...Array(size)].map(() => Math.floor(Math.random() * 16).toString(16)).join('');
           await removeFile(randHex(Math.floor(Math.random() * 12)), fileSize)
         }
         else {
           await removeFile(threat, fileSize);
         }
       }
-      printToTerminal("[system-vn-vatproc]: " + "Threat removal process complete.");
-      printToTerminal("[system-vn-vatproc]: " + "Initiating auxiliary system scan.")
+      printToTerminal("[system-vnet-vatproc]: " + "Threat removal process complete.");
+      printToTerminal("[system-vnet-vatproc]: " + "Initiating auxiliary system scan.")
       remoteScan(false);
     }
 
@@ -452,9 +508,25 @@ document.addEventListener("DOMContentLoaded", function () {
       printToTerminal("• " + "help" + ": " + help_responses["help"].response);
       printToTerminal("• " + "cmds" + ": " + help_responses["cmds"].response);
       printToTerminal("• " + "errs" + ": " + help_responses["errs"].response);
+      printToTerminal("• " + "update" + ": " + help_responses["update"].response);
       printToTerminal("• " + "scan" + ": " + help_responses["scan"].response);
+      printToTerminal("• " + "logout" + ": " + help_responses["logout"].response);
       printToTerminal("• " + "reboot" + ": " + help_responses["reboot"].response);
       printToTerminal("[system-info]: Furthermore, to learn more information about any other command, input '-h' as the argument in your input.")
+    }
+
+    function cmd_logout() {
+      disableInput();
+       printToTerminal("[system-info]: Logging out...");
+       localStorage.clear();
+       setTimeout(() => {
+          terminal.replaceChildren();
+          printToTerminal("[system-info]: Logged out.");
+          printToTerminal("[system-info]: Thank you for using the VarNet AdminAccess Remote Terminal System.");
+          setTimeout(() => {
+            window.location.replace("..")
+          }, 15000);
+        }, 5700);
     }
 
     function cmd_update(cmd) {
@@ -482,7 +554,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     let systemFiles = [
       "_sys\\VarNet\\bootstat.dat",
-      "_sys\\VarNet\\vn.ini",
+      "_sys\\VarNet\\vnet.ini",
       "_sys\\VarNet\\regedit.exe",
       "C_RandNum",
       "NumRand",
@@ -508,7 +580,7 @@ document.addEventListener("DOMContentLoaded", function () {
       "Term",
       "Terminal",
       "VarNet",
-      "vn",
+      "vnet",
       "admin",
       "config",
       "diag",
@@ -627,11 +699,9 @@ document.addEventListener("DOMContentLoaded", function () {
               await updateFile(directory + "C_" + Math.floor(Math.random() * 5000) + ".dll", fileSize);
             }
             else if (file == "HexRand") {
-              const randHex = size => [...Array(size)].map(() => Math.floor(Math.random() * 16).toString(16)).join('');
               await updateFile(directory + randHex(4 + Math.floor(Math.random() * 6)) + ".dll", fileSize)
             }
             else if (file == "C_RandHex") {
-              const randHex = size => [...Array(size)].map(() => Math.floor(Math.random() * 16).toString(16)).join('');
               await updateFile(directory + "C_" + randHex(8) + ".dll", fileSize)
             }
             else if (file == "FullRand") {
@@ -724,7 +794,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function enableInput() {
       input_enabled = true;
-      fakeInput.innerHTML = "_VNAA _sys:\\Users\\Administrator>" + realInput.value;
+      fakeInput.innerHTML = "_VNet _sys:\\Users\\" + user +">" + realInput.value;
       realInput.disabled = false;
       realInput.focus();
     }

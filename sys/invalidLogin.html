@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VarNet AdminAccess</title>
+    <link rel="stylesheet" href="sty/main.css">
+</head>
+<body>
+    <section style="height: 95vh" id="sect" >
+        <div id="container">
+            <div id="terminal">
+[system-manager]: This terminal has encountered an error and cannot continue.
+[err]: 0x00bb - Invalid login credentials for remote system access.
+[system-info]: Please press 'ENTER' to return to AdminAccess Login.
+            </div>
+            <div id="inputLine" onclick="document.getElementById('inp').focus();">
+                <span id="line"></span><span id="cursor"></span>
+            </div>
+            <input type="text" id="inp" autocomplete="off" />
+        </div>
+    </section>
+
+    <script>
+        document.getElementById('inp').addEventListener('keydown', function(event) {
+            if (event.key === 'Enter') {
+                window.location.replace("..")
+            }
+        });
+    </script>
+</body>
+</html>

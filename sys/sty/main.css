@@ -48,6 +48,17 @@ input[type="text"] {
     width: 10em;
 }
 
+input[type="password"] {
+    resize: none;
+    background-color: black;
+    border: 0px solid black;
+    color: skyblue;
+    outline: none;
+    font-family: fnt_base, monospace;
+    font-size: medium;
+    width: 10em;
+}
+
 input[type="text"]:focus {
     resize: none;
     background-color: black;

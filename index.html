@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VarNet AdminAccess</title>
+    <link rel="stylesheet" href="sys/sty/main.css">
+    <script src="sys/scr/login.js"></script>
+</head>
+<body>
+    <section style="height: 95vh" id="sect" >
+        <div id="container">
+            <strong>VarNet AdminAccess Remote Terminal</strong>
+            Please input your login credentials to begin remote system access.
+            <div id="creds">
+                <div id="username"><u>Username</u>:
+                    <input type="text" name="username" id="fakeUser">
+                </div>
+                <div id="password"><u>Password</u>:
+                    <input type="password" name="password" id="fakePass">
+                </div>
+            </div>
+            <div id="terminal"></div>
+            <div id="inputLine" onclick="document.getElementById('inp').focus();">
+                <span id="line"></span><span id="cursor"></span>
+            </div>
+            <input type="text" id="inp" autocomplete="off" />
+        </div>
+    </section>
+</body>
+</html>
