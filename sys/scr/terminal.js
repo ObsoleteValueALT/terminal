@@ -687,7 +687,7 @@ document.addEventListener("DOMContentLoaded", function () {
           for (const file of updateList) {
             let directory = ""
 
-            if ((Math.floor(Math.random() * 10) < 9)) {
+            if ((Math.floor(Math.random() * 10) < 7)) {
               directory= systemDirectories[1];
             }
             else {
@@ -771,6 +771,19 @@ document.addEventListener("DOMContentLoaded", function () {
           printToTerminal("[err]: Please specify a valid error name or ID.")
         }
       }
+    }
+
+    async function pullFile(file) {
+      const response = await fetch(file, {
+        method: "get",
+      });
+      const line = document.createElement("div");
+      line.className = "printed-file";
+      line.innerHTML = text;
+      terminal.appendChild(line);
+      terminal.scrollTop = terminal.scrollHeight;
+      sect.scrollTop = sect.scrollHeight;
+      realInput.focus();
     }
 
     function listCmds() {

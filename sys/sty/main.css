@@ -25,6 +25,11 @@ section {
     scrollbar-gutter: stable;
 }
 
+.printed-file {
+    padding: 4px;
+    border: 1px solid skyblue;
+}
+
 pre {
     font-weight: bolder;
     font-size: medium;

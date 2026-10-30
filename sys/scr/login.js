@@ -64,6 +64,7 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   function login() {
+    disableInput();
     printToTerminal("[system-info]: Logging in...")
     localStorage.setItem("loggedInUser", user);
     localStorage.setItem("loggedInPassword", password);
