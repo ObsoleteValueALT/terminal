@@ -21,7 +21,7 @@ document.addEventListener("DOMContentLoaded", function () {
   let demo = false;
   let input_enabled = true;
 
-  let availUpdates = 0;
+  let availUpdates = Math.floor(Math.random());
 
   function printToTerminal(text) {
     const line = document.createElement("div");
@@ -158,6 +158,9 @@ document.addEventListener("DOMContentLoaded", function () {
           help: {
             action: cmd_help
           },
+          info: {
+            action: cmd_info
+          },
           update: {
             action: cmd_update
           },
@@ -195,6 +198,9 @@ document.addEventListener("DOMContentLoaded", function () {
           },
           help: {
             response: "Provides some basic helpful information for using the AdminAccess interface as well as common useful commands."
+          },
+          help: {
+            response: "Check information regarding this remote terminal and the current connection."
           },
           update: {
             response: "Check for and initiate updates on this terminal."
@@ -245,7 +251,7 @@ document.addEventListener("DOMContentLoaded", function () {
           id: "0x0007"
         },
         invalid_data: {
-          response: "The data provided (<dat>) is invalid.",
+          response: "The data provided (<dat>) is invalid or does not exist.",
           id: "0x0008"
         },
         busy: {
@@ -270,10 +276,10 @@ document.addEventListener("DOMContentLoaded", function () {
             else {
               let num = Math.floor(Math.random() * 3) + 2;
               availUpdates+= num;
-              printToTerminal("[system-info]: system-manager has identified " + num +" new update! Update terminal using 'update all'.");
+              printToTerminal("[system-info]: system-manager has identified " + num +" new updates! Update terminal using 'update all'.");
             }
           }
-        }, 60000);
+        }, 180000);
 
         setInterval(() => {
           if (!scanning) {
@@ -512,6 +518,21 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     }
 
+    function cmd_info(check) {
+      if (check == "id") {
+        printToTerminal("[system-info]: This terminal's system ID is " + systemID + ".")
+      }
+      else if (check == "login") {
+        printToTerminal("[system-info]: You are currently logged in as " + user.name + " (" + user + ").")
+      }
+      else if (check == "connection") {
+        printToTerminal("[system-info]: This terminal is connected to VarNet AdminAccess Server " + server + " at Port " + serverPort + ".")
+      }
+      else {
+        printToTerminal("[err]: " + "<span style=\"color: orangered;\">" +errs.invalid_data.response.replace("<dat>", "'" + check + "'") + "</span>");
+      }
+    }
+
     function cmd_help() {
       printToTerminal("[system-info]: Thank you for using the VarNet AdminAccess Remote Terminal System.");
       printToTerminal("[system-info]: Below are some helpful commands and a brief description regarding their function:");
@@ -689,7 +710,7 @@ document.addEventListener("DOMContentLoaded", function () {
             for (let i = 0; i < numFiles; i++) {
               updateList[i] = systemFiles[Math.floor(Math.random() * randomFiles.length)];
           };
-          printToTerminal("[system-manager]: Estimated wait time of " + (numFiles * Math.random() * 5 )+ " seconds.")
+          printToTerminal("[system-manager]: Estimated wait time of " + (numFiles * Math.random() * 5 ).toFixed(2) + " seconds.")
           printToTerminal("[system-manager]: Updating...")
           disableInput();
           for (const file of updateList) {

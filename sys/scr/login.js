@@ -159,7 +159,7 @@ document.addEventListener("DOMContentLoaded", function () {
       };
 
       initLogin();
-      fakeInput.textContent = "_VNetAA _sys:\\login.dll>" + realInput.value;
+      fakeInput.textContent = "_VNet _sys:\\login.dll>" + realInput.value;
 
       function initLogin() {       
         enableInput();
