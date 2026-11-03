@@ -199,7 +199,7 @@ document.addEventListener("DOMContentLoaded", function () {
           help: {
             response: "Provides some basic helpful information for using the AdminAccess interface as well as common useful commands."
           },
-          help: {
+          info: {
             response: "Check information regarding this remote terminal and the current connection."
           },
           update: {
@@ -523,7 +523,7 @@ document.addEventListener("DOMContentLoaded", function () {
         printToTerminal("[system-info]: This terminal's system ID is " + systemID + ".")
       }
       else if (check == "login") {
-        printToTerminal("[system-info]: You are currently logged in as " + user.name + " (" + user + ").")
+        printToTerminal("[system-info]: You are currently logged in as " + logins[user].name + " (" + user + ").")
       }
       else if (check == "connection") {
         printToTerminal("[system-info]: This terminal is connected to VarNet AdminAccess Server " + server + " at Port " + serverPort + ".")
@@ -538,6 +538,7 @@ document.addEventListener("DOMContentLoaded", function () {
       printToTerminal("[system-info]: Below are some helpful commands and a brief description regarding their function:");
       printToTerminal("• " + "help" + ": " + help_responses["help"].response);
       printToTerminal("• " + "cmds" + ": " + help_responses["cmds"].response);
+      printToTerminal("• " + "info" + ": " + help_responses["info"].response);
       printToTerminal("• " + "errs" + ": " + help_responses["errs"].response);
       printToTerminal("• " + "update" + ": " + help_responses["update"].response);
       printToTerminal("• " + "scan" + ": " + help_responses["scan"].response);
