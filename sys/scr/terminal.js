@@ -200,7 +200,7 @@ document.addEventListener("DOMContentLoaded", function () {
             response: "Provides some basic helpful information for using the AdminAccess interface as well as common useful commands."
           },
           info: {
-            response: "Check information regarding this remote terminal and the current connection."
+            response: "Check information regarding this remote terminal and the current connection. Valid arguments are 'id', 'login', and 'connection'."
           },
           update: {
             response: "Check for and initiate updates on this terminal."
@@ -550,6 +550,7 @@ document.addEventListener("DOMContentLoaded", function () {
     function cmd_logout() {
       disableInput();
        printToTerminal("[system-info]: Logging out...");
+       scanning = true;
        localStorage.clear();
        setTimeout(() => {
           terminal.replaceChildren();
@@ -814,6 +815,12 @@ document.addEventListener("DOMContentLoaded", function () {
       terminal.scrollTop = terminal.scrollHeight;
       sect.scrollTop = sect.scrollHeight;
       realInput.focus();
+    }
+
+    async function runFile(file) {
+      if (file.toLowerCase() == "adminaccess") {
+        window.open("../", "_blank", "popup=true" )
+      }
     }
 
     function listCmds() {
